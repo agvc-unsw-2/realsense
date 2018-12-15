@@ -83,6 +83,11 @@ void RS435Node::setParam(rs435_paramsConfig &config, rs435_param param)
         static const auto rs435_depth_exposure_factor = 20;
         ROS_DEBUG_STREAM("rs435_depth_exposure: " << config.rs435_depth_exposure * rs435_depth_exposure_factor);
         _sensors[DEPTH].set_option(rs2_option::RS2_OPTION_EXPOSURE, config.rs435_depth_exposure * rs435_depth_exposure_factor);
+        // Workaround, as the depth auto exposure is not correctly initialized.
+        if (config.rs435_depth_enable_auto_exposure)
+        {
+            BaseD400Node::setParam(config, base_depth_enable_auto_exposure);
+        }
     }
         break;
     case rs435_depth_laser_power:
@@ -93,7 +98,7 @@ void RS435Node::setParam(rs435_paramsConfig &config, rs435_param param)
     }
         break;
     case rs435_depth_emitter_enabled:
-        ROS_DEBUG_STREAM("rs435_depth_emitter_enabled: " << config.rs435_depth_emitter_enabled);
+        ROS_INFO_STREAM("rs435_depth_emitter_enabled: " << config.rs435_depth_emitter_enabled);
         _sensors[DEPTH].set_option(rs2_option::RS2_OPTION_EMITTER_ENABLED, config.rs435_depth_emitter_enabled);
         break;
     default:
