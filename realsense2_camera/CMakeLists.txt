@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
     tf
     dynamic_reconfigure
     diagnostic_updater
+    mavros_msgs
     )
 
 if(BUILD_WITH_OPENMP)
