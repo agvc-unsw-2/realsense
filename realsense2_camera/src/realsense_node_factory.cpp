@@ -60,8 +60,19 @@ void RealSenseNodeFactory::getDevice(rs2::device_list list)
 			for (auto&& dev : list)
 			{
 				auto sn = dev.get_info(RS2_CAMERA_INFO_SERIAL_NUMBER);
-				ROS_DEBUG_STREAM("Device with serial number " << sn << " was found.");
-				if (_serial_no.empty() || sn == _serial_no)
+                std::string name = dev.get_info(RS2_CAMERA_INFO_NAME);
+                bool name_find = false;
+				ROS_INFO_STREAM("Device with serial number " << sn << " and name " << name << " was found.");
+                if (_serial_no[0] == '_') {
+                    // Device type search
+                    std::string type = _serial_no.substr(1);
+                    if (name.find(type) != std::string::npos) {
+                        ROS_INFO_STREAM("Device " << name << " matches search type " << type);
+                        name_find = true;
+                    }
+                }
+
+				if (name_find || _serial_no.empty() || sn == _serial_no)
 				{
 					_device = dev;
 					_serial_no = sn;
